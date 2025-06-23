@@ -9,7 +9,7 @@ import ast
 import io
 import contextlib
 import matplotlib.pyplot as plt
-import check_for_updates
+from check_for_updates import check_for_updates
 
 class PythonIDE:
     def __init__(self, root):
