@@ -14,6 +14,8 @@ def main():
 
     console = ConsoleOutput(root)
     console.pack(fill=tk.X)
+    run_button = tk.Button(root, text="Run ▶", command=runner.run_code, bg="#4CAF50", fg="white")
+    run_button.pack(fill=tk.X)
 
     runner = CodeRunner(editor, console)
     setup_menu(root, editor, runner)

@@ -11,7 +11,8 @@ def setup_menu(root, editor, runner):
     menubar.add_cascade(label="File", menu=filemenu)
 
     runmenu = Menu(menubar, tearoff=0)
-    runmenu.add_command(label="Run", command=runner.run_code)
+    runmenu.add_command(label="Run", accelerator="F5", command=lambda: root.event_generate("<<RunCode>>"))
     menubar.add_cascade(label="Run", menu=runmenu)
 
     root.config(menu=menubar)
+    root.bind("<<RunCode>>", lambda e: runner.run_code())
