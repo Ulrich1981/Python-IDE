@@ -5,7 +5,7 @@ set -e
 # CONFIG
 REPO_URL="https://github.com/Ulrich1981/Python-IDE.git"
 REPO_DIR="$HOME/.Python-IDE"
-PYTHON_VERSION="python3.10"
+PYTHON_VERSION="python3"  # <-- use system default
 VENV_DIR="$REPO_DIR/venv"
 STARTER_LINK="/usr/local/bin/Python-IDE"
 
@@ -13,6 +13,7 @@ STARTER_LINK="/usr/local/bin/Python-IDE"
 echo "Installing dependencies..."
 sudo apt update
 sudo apt install -y $PYTHON_VERSION $PYTHON_VERSION-venv git
+sudo apt install -y python3-tk
 
 # --- Clone repo ---
 if [ ! -d "$REPO_DIR" ]; then
