@@ -3,6 +3,30 @@ import importlib
 import subprocess
 import sys
 
+
+def find_missing_packages_with_positions(code):
+    missing = []
+    try:
+        tree = ast.parse(code)
+    except SyntaxError:
+        return missing
+    required = []
+    for node in ast.walk(tree):
+        if isinstance(node, ast.Import):
+            for alias in node.names:
+                required.append((alias.name.split('.')[0], node.lineno))
+        elif isinstance(node, ast.ImportFrom):
+            if node.module:
+                required.append((node.module.split('.')[0], node.lineno))
+    import importlib
+    for pkg, lineno in required:
+        try:
+            importlib.import_module(pkg)
+        except ImportError:
+            missing.append((pkg, lineno))
+    return missing
+
+
 class PackageChecker:
     @staticmethod
     def get_missing_packages(code):
@@ -27,24 +51,3 @@ class PackageChecker:
     def install_package(pkg):
         subprocess.call([sys.executable, "-m", "pip", "install", pkg])
 
-    def find_missing_packages_with_positions(code):
-        missing = []
-        try:
-            tree = ast.parse(code)
-        except SyntaxError:
-            return missing
-        required = []
-        for node in ast.walk(tree):
-            if isinstance(node, ast.Import):
-                for alias in node.names:
-                    required.append((alias.name.split('.')[0], node.lineno))
-            elif isinstance(node, ast.ImportFrom):
-                if node.module:
-                    required.append((node.module.split('.')[0], node.lineno))
-        import importlib
-        for pkg, lineno in required:
-            try:
-                importlib.import_module(pkg)
-            except ImportError:
-                missing.append((pkg, lineno))
-        return missing

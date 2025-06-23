@@ -1,7 +1,7 @@
 import tkinter as tk
 from editor.autocomplete import AutoComplete
 from editor.syntax_highlighter import SyntaxHighlighter
-from executor.package_checker import PackageChecker
+from executor.package_checker import find_missing_packages_with_positions
 
 class TextEditor(tk.Frame):
     def __init__(self, master):
@@ -72,8 +72,7 @@ class TextEditor(tk.Frame):
         self.text.tag_remove("missing_pkg", "1.0", "end")
         self.text.tag_configure("missing_pkg", underline=True, foreground="red")
 
-        checker = PackageChecker()
-        missing = checker.find_missing_packages_with_positions(code)
+        missing = find_missing_packages_with_positions(code)
         for pkg, lineno in missing:
             line_start = f"{lineno}.0"
             line_text = self.text.get(line_start, f"{lineno}.end")
