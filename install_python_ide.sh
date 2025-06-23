@@ -43,6 +43,10 @@ EOF
 chmod +x "$REPO_DIR/launch.sh"
 
 # --- Add to PATH (optional) ---
+if [ ! -d /usr/local/bin ]; then
+    echo "Creating /usr/local/bin..."
+    sudo mkdir -p /usr/local/bin
+fi
 echo "Creating system-wide shortcut..."
 sudo ln -sf "$REPO_DIR/launch.sh" "$STARTER_LINK"
 
