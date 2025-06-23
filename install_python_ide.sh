@@ -36,8 +36,8 @@ echo "Creating launcher script..."
 cat << EOF > "$REPO_DIR/launch.sh"
 #!/bin/bash
 cd "$HOME/.Python-IDE"
-source "venv/bin/activate"
-python3 Python-IDE/python_ide.py
+source "$HOME/.Python-IDE/venv/bin/activate"
+python3 "$HOME/.Python-IDE/Python-IDE/python_ide.py"
 EOF
 
 chmod +x "$REPO_DIR/launch.sh"
