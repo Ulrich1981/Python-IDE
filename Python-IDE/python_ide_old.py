@@ -1,8 +1,11 @@
+# Run update check before actual app
+from check_for_updates import check_for_updates
+check_for_updates()
+
 import tkinter as tk
 from tkinter import filedialog, messagebox
 import keyword
 import os
-from check_for_updates import check_for_updates
 import sys
 import threading
 import traceback
@@ -200,9 +203,6 @@ class PythonIDE:
 
 
 if __name__ == "__main__":
-    # Run update check before actual app
-    check_for_updates()
-
     root = tk.Tk()
     ide = PythonIDE(root)
     root.mainloop()
