@@ -35,8 +35,10 @@ echo "Installing requirements..."
 echo "Creating launcher script..."
 cat << EOF > "$REPO_DIR/launch.sh"
 #!/bin/bash
-cd "\$(dirname "\$0")"
-source venv/bin/activate
+APP_DIR="$HOME/.Python-IDE"
+
+cd "$APP_DIR"
+source "$APP_DIR/venv/bin/activate"
 python3 Python-IDE/python_ide.py
 EOF
 
