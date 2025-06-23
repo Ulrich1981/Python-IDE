@@ -8,6 +8,8 @@ import importlib
 import ast
 import io
 import contextlib
+import matplotlib.pyplot as plt
+import check_for_updates
 
 class PythonIDE:
     def __init__(self, root):
@@ -112,8 +114,9 @@ class PythonIDE:
         self.console.see(tk.END)
 
 if __name__ == "__main__":
-    import matplotlib.pyplot as plt  # Ensure plotting works if needed
-
+    # Run update check before actual app
+    check_for_updates()
+    
     root = tk.Tk()
     ide = PythonIDE(root)
     root.mainloop()
