@@ -14,7 +14,7 @@ setup(
     ],
     entry_points={
         "console_scripts": [
-            "Python-IDE=main:Python-IDE/python_ide",
+            "python-ide=Python_IDE.python_ide:main",
         ],
     },
     python_requires=">=3.7",
