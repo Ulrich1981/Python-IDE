@@ -1,6 +1,7 @@
 import traceback
 import io
 import sys
+import matplotlib.pyplot as plt
 
 class CodeRunner:
     def __init__(self, editor, console):

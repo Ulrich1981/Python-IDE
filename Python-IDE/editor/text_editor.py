@@ -1,3 +1,4 @@
+import re
 import tkinter as tk
 from editor.autocomplete import AutoComplete
 from editor.syntax_highlighter import SyntaxHighlighter
@@ -105,23 +106,22 @@ class TextEditor(tk.Frame):
 
     def install_package_prompt(self, event):
         index = self.text.index(f"@{event.x},{event.y}")
-        tags = self.text.tag_names(index)
-        if "missing_pkg" in tags:
-            # find package name under mouse
-            for tag_range in self.text.tag_ranges("missing_pkg"):
-                start = tag_range.string
-                if self.text.compare(start, "<=", index) and self.text.compare(index, "<", tag_range):
-                    pkg_name = self.text.get(tag_range, f"{tag_range} + {len(pkg_name)}c")
-                    break
-            else:
-                # fallback: get word at index
-                pkg_name = self.text.get(f"{index} wordstart", f"{index} wordend")
+        ranges = self.text.tag_ranges("missing_pkg")
 
-            import tkinter.messagebox as msgbox
-            if msgbox.askyesno("Install package", f"Do you want to install '{pkg_name}'?"):
-                import subprocess, sys
-                subprocess.Popen([sys.executable, "-m", "pip", "install", pkg_name])
-                msgbox.showinfo("Installing", f"Installing '{pkg_name}' in background.")
+        for i in range(0, len(ranges), 2):
+            start = ranges[i]
+            end = ranges[i + 1]
+            if self.text.compare(start, "<=", index) and self.text.compare(index, "<", end):
+                pkg_name = self.text.get(start, end)
+                break
+        else:
+            pkg_name = self.text.get(f"{index} wordstart", f"{index} wordend")
+
+        import tkinter.messagebox as msgbox
+        if msgbox.askyesno("Install package", f"Do you want to install '{pkg_name}'?"):
+            import subprocess, sys
+            subprocess.Popen([sys.executable, "-m", "pip", "install", pkg_name])
+            msgbox.showinfo("Installing", f"Installing '{pkg_name}' in background.")
 
     def schedule_package_check(self):
         self.check_missing_packages()
