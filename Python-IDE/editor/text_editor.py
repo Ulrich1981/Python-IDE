@@ -28,7 +28,7 @@ class TextEditor(tk.Frame):
         self.paned.add(self.file_tree, minsize=180)
         self.paned.add(self.notebook)
 
-        self.notebook.pack(fill="both", expand=True)
+        self.paned.pack(fill="both", expand=True)
         self.text_widgets = {}
 
         self.pkg_checker = PackageChecker()
@@ -45,6 +45,7 @@ class TextEditor(tk.Frame):
         self.menu.add_command(label="New Tab", command=self.new_tab)
         self.menu.add_command(label="Close Tab", command=self.close_current_tab)
         self.notebook.bind("<Button-3>", self.on_right_click_tab)
+        self.menu.add_command(label="Set File Tree Root", command=self.choose_file_tree_root)
 
     @property
     def text(self):
@@ -54,7 +55,14 @@ class TextEditor(tk.Frame):
         current_tab = self.nametowidget(current_tab_id)
         return self.text_widgets.get(current_tab)
 
+    def choose_file_tree_root(self):
+        from tkinter import filedialog
+        directory = filedialog.askdirectory(title="Choose Root Directory")
+        if directory:
+            self.populate_file_tree(directory)
+
     def populate_file_tree(self, path="."):
+        self.file_tree_root = path  # remember
         self.file_tree.delete(*self.file_tree.get_children())
         root = self.file_tree.insert("", "end", text=os.path.abspath(path), open=True, values=[path])
         self.populate_node_children(root, path)
@@ -126,6 +134,9 @@ class TextEditor(tk.Frame):
 
     def load_open_tabs(self):
         config = load_config()
+        root_dir = config.get("file_tree_root", ".")
+        self.populate_file_tree(root_dir)
+
         files = config.get("open_files", [])
         if not files:
             return
@@ -165,6 +176,9 @@ class TextEditor(tk.Frame):
         current_text = self.text
         if current_text and getattr(current_text, "path", None):
             config["last_open_file"] = current_text.path
+
+        root_dir = getattr(self, "file_tree_root", ".")
+        config["file_tree_root"] = root_dir
         save_config(config)
 
     def on_tab_changed(self, event):
